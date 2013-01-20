@@ -1,3 +1,20 @@
+# Everyplay for cocos2d-x
+
+All examples link Everyplay framework from a relative path. To get started, please clone
+the repository at https://github.com/Everyplay/everyplay-ios-sdk/ to the same subdirectory
+where you'll place `cocos2d-x`. No git submodule usage planned.
+
+```
+% git clone https://github.com/Everyplay/everyplay-ios-sdk.git
+% git clone https://github.com/Everyplay/cocos2d-x.git
+% cd cocos2d-x
+% open -a Xcode samples/Cpp/SimpleGame/proj.ios/SimpleGame.xcodeproj
+```
+
+And then try running SimpleGame example on a device.
+
+For more information, please visit us at https://developers.everyplay.com
+
 cocos2d-x 
 ==================
 
