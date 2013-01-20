@@ -72,10 +72,46 @@ static AppDelegate s_sharedApplication;
 
     [[UIApplication sharedApplication] setStatusBarHidden: YES];
     
+    // Initialize Everyplay SDK with our client id and secret.
+    // These can be created at https://developers.everyplay.com
+    [Everyplay setClientId:@"b459897317dc88c80b4515e380e1378022f874d2" clientSecret:@"f1a162969efb1c27aac6977f35b34127e68ee163" redirectURI:@"https://m.everyplay.com/auth"];
+
+    // Register class responsible for EveryplayDelegate and
+    // view controller used
+    [Everyplay initWithDelegate:self andParentViewController:viewController];
+
+    // For quick testing, let's auto-record for a few seconds
+    //
+    // When integrating against your game, call startRecording and stopRecording
+    // methods from [[Everyplay sharedInstance] capture] instead
+    [[[Everyplay sharedInstance] capture] autoRecordForSeconds:10 withDelay:2];
+
     cocos2d::CCApplication::sharedApplication()->run();
     return YES;
 }
 
+- (void)everyplayShown {
+    NSLog(@"everyplayShown");
+    cocos2d::CCDirector::sharedDirector()->pause();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseAllEffects();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+}
+
+- (void)everyplayHidden {
+    NSLog(@"everyplayHidden");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeAllEffects();
+    cocos2d::CCDirector::sharedDirector()->resume();
+}
+
+- (void)everyplayRecordingStopped {
+    NSLog(@"everyplayRecordingStopped");
+
+    // Set metadata for the ongoing or last active recording
+    [[Everyplay sharedInstance] mergeSessionDeveloperData:@{@"score" : @42, @"level_name" : @"cocos2d-x"}];
+    // Bring up Everyplay video player
+    [[Everyplay sharedInstance] playLastRecording];
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*
